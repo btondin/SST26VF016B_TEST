@@ -1,0 +1,63 @@
+/*
+ * SST26VF016B SPI NOR Flash - Test overlay
+ * Compatible: "jedec,spi-nor"
+ * Interface: SPI1
+ */
+
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+&i2c0 { status = "disabled"; };
+&i2c1 { status = "disabled"; };
+&spi0 { status = "disabled"; };
+&adc  { status = "disabled"; };
+
+&spi1 {
+    compatible = "nordic,nrf-spim";
+    status = "okay";
+
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    cs-gpios = <&gpio0 19 GPIO_ACTIVE_LOW>; /* CS da flash externa */
+
+    pinctrl-0 = <&spi1_default>;
+    pinctrl-1 = <&spi1_sleep>;
+    pinctrl-names = "default", "sleep";
+
+    sst26wf016ba: sst26wf016ba@0 {
+        compatible = "jedec,spi-nor";
+        reg = <0>;
+        spi-max-frequency = <1000000>; /* 1 MHz - protoboard */
+        jedec-id = [bf 26 41]; /* SST26VF016B (2.5-3.3V) */
+        size = <16777216>; /* 16 Mbit = 2 MB */
+        requires-ulbpr;
+        status = "okay";
+
+        /* SFDP BFP lido do chip - para uso com CONFIG_SPI_NOR_SFDP_DEVICETREE */
+        /* sfdp-bfp = [
+            fd 20 f1 ff ff ff ff 00 44 eb 08 6b 08 3b 80 bb
+            fe ff ff ff ff ff 00 ff ff ff 44 0b 0c 20 0d d8
+            0f d8 10 d8 20 91 48 24 80 6f 1d 81 ed 0f 77 38
+            30 b0 30 b0 f7 a9 d5 5c 29 c2 5c ff f0 30 c0 80
+        ]; */
+    };
+};
+
+&pinctrl {
+    spi1_default: spi1_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK,  0, 11)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 12)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 13)>;
+        };
+    };
+
+    spi1_sleep: spi1_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK,  0, 11)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 12)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 13)>;
+            low-power-enable;
+        };
+    };
+};
