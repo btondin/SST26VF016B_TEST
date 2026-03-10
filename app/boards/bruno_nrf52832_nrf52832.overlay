@@ -27,7 +27,7 @@
     sst26wf016ba: sst26wf016ba@0 {
         compatible = "jedec,spi-nor";
         reg = <0>;
-        spi-max-frequency = <1000000>; /* 1 MHz - protoboard */
+        spi-max-frequency = <8000000>; /* 8 MHz - max nRF52832 SPIM */ 
         jedec-id = [bf 26 41]; /* SST26VF016B (2.5-3.3V) */
         size = <16777216>; /* 16 Mbit = 2 MB */
         requires-ulbpr;

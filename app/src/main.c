@@ -14,9 +14,8 @@
 LOG_MODULE_REGISTER(app, CONFIG_LOG_DEFAULT_LEVEL);
 
 #define FLASH_NODE DT_NODELABEL(sst26wf016ba)
-
 #define TEST_OFFSET  0x0000
-#define TEST_SIZE    256
+#define TEST_SIZE    4096
 #define SECTOR_SIZE  4096
 
 int main(void)
